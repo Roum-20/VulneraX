@@ -33,3 +33,11 @@ A lightweight Python-based web security scanner that **crawls** and **scans** we
 
 ```bash
 pip install requests beautifulsoup4 urllib3 colorama
+```
+## ▶️ Run the Scanner
+```bash
+python3 scanner.py https://example.com
+```
+
+
+
