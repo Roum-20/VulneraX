@@ -41,11 +41,14 @@ python3 scanner.py https://example.com
 
 ### 🧪 Example Output
    [Crawling] https://example.com
+
+   
 [VULNERABILITY FOUND]
 type: SQL Injection
 url: https://example.com/search?q='
 parameter: q
 payload: '
+
 
 [VULNERABILITY FOUND]
 type: Missing Security Header
