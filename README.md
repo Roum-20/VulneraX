@@ -1,4 +1,4 @@
-# VulneraX
+# VulneraX-Expose the Risks. Secure the Web
 A lightweight Python-based web security scanner that **crawls** and **scans** websites for common vulnerabilities inspired by the [OWASP Top 10](https://owasp.org/www-project-top-ten/). Perfect for developers, ethical hackers, and security students looking to understand common web application security flaws.
 
 ---
