@@ -45,14 +45,18 @@ python3 scanner.py https://example.com
    
 [VULNERABILITY FOUND]
 type: SQL Injection
-url: https://example.com/search?q='
-parameter: q
-payload: '
 
+url: https://example.com/search?q='
+
+parameter: q
+
+payload: '
 
 [VULNERABILITY FOUND]
 type: Missing Security Header
+
 url: https://example.com
+
 header: Content-Security-Policy
 
 ### ⚠️ Legal Notice
