@@ -39,5 +39,20 @@ pip install requests beautifulsoup4 urllib3 colorama
 python3 scanner.py https://example.com
 ```
 
+### 🧪 Example Output
+   [Crawling] https://example.com
+[VULNERABILITY FOUND]
+type: SQL Injection
+url: https://example.com/search?q='
+parameter: q
+payload: '
 
+[VULNERABILITY FOUND]
+type: Missing Security Header
+url: https://example.com
+header: Content-Security-Policy
+### ⚠️ Legal Notice
+This tool is intended only for authorized testing and educational purposes. Scanning websites without permission is illegal and unethical.
+
+Always have explicit permission before scanning a site.
 
