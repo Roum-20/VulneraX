@@ -1,5 +1,6 @@
 requests==2.31.0
 beautifulsoup4==4.12.3
 colorama==0.4.6
-urllib3==2.2.1
+urllib3==2.2.1streamlit
+streamlit
 ### These versions are stable and tested with Python 3.11+.
