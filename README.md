@@ -1,10 +1,10 @@
 # VulneraX-Expose the Risks. Secure the Web
-A lightweight Python-based web security scanner that **crawls** and **scans** websites for common vulnerabilities inspired by the [OWASP Top 10](https://owasp.org/www-project-top-ten/). Perfect for developers, ethical hackers, and security students looking to understand common web application security flaws.
+This is a Streamlit-based web application that scans a given website URL for common web security vulnerabilities inspired by the [OWASP Top 10](https://owasp.org/www-project-top-ten/). Perfect for developers, ethical hackers, and security students looking to understand common web application security flaws.
 
 ---
 
 ## 🧰 Features
-
+- 🖥️ Streamlit Dashboard:
 - 🔎 Crawler with configurable depth
 - ✅ Multithreaded scanning (fast)
 - 📑 Terminal-friendly output with color
@@ -32,33 +32,12 @@ A lightweight Python-based web security scanner that **crawls** and **scans** we
 - Install dependencies:
 
 ```bash
-pip install requests beautifulsoup4 urllib3 colorama
+pip install -r requirements.txt
 ```
 ## ▶️ Run the Scanner
 ```bash
-python3 scanner.py https://example.com
+streamlit run app.py
 ```
-
-### 🧪 Example Output
-   [Crawling] https://example.com
-
-   
-[VULNERABILITY FOUND]
-type: SQL Injection
-
-url: https://example.com/search?q='
-
-parameter: q
-
-payload: '
-
-[VULNERABILITY FOUND]
-type: Missing Security Header
-
-url: https://example.com
-
-header: Content-Security-Policy
-
 ### ⚠️ Legal Notice
 This tool is intended only for authorized testing and educational purposes. Scanning websites without permission is illegal and unethical.
 
