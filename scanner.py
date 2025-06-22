@@ -8,7 +8,6 @@ import sys
 from typing import List, Dict, Set
 import urllib3
 
-# Disable SSL warnings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 colorama.init()
 
@@ -27,20 +26,17 @@ class WebSecurityScanner:
     def crawl(self, url: str, depth: int = 0) -> None:
         if depth > self.max_depth or url in self.visited_urls:
             return
-
         try:
             print(f"{colorama.Fore.CYAN}[Crawling]{colorama.Style.RESET_ALL} {url}")
             self.visited_urls.add(url)
             response = self.session.get(url, verify=False, timeout=10)
             soup = BeautifulSoup(response.text, 'html.parser')
-
             links = soup.find_all('a', href=True)
             for link in links:
                 next_url = urllib.parse.urljoin(url, link['href'])
                 next_url = self.normalize_url(next_url)
                 if next_url.startswith(self.target_url):
                     self.crawl(next_url, depth + 1)
-
         except Exception as e:
             print(f"Error crawling {url}: {str(e)}")
 
@@ -50,21 +46,16 @@ class WebSecurityScanner:
             try:
                 parsed = urllib.parse.urlparse(url)
                 params = urllib.parse.parse_qs(parsed.query)
-
                 for param in params:
-                    test_url = url.replace(f"{param}={params[param][0]}",
-                                           f"{param}={payload}")
+                    test_url = url.replace(f"{param}={params[param][0]}", f"{param}={payload}")
                     response = self.session.get(test_url, verify=False, timeout=10)
-
-                    if any(error in response.text.lower() for error in 
-                           ['sql', 'mysql', 'sqlite', 'postgresql', 'oracle']):
+                    if any(error in response.text.lower() for error in ['sql', 'mysql', 'sqlite', 'postgresql', 'oracle']):
                         self.report_vulnerability({
                             'type': 'SQL Injection',
                             'url': url,
                             'parameter': param,
                             'payload': payload
                         })
-
             except Exception as e:
                 print(f"Error testing SQL injection on {url}: {str(e)}")
 
@@ -78,12 +69,9 @@ class WebSecurityScanner:
             try:
                 parsed = urllib.parse.urlparse(url)
                 params = urllib.parse.parse_qs(parsed.query)
-
                 for param in params:
-                    test_url = url.replace(f"{param}={params[param][0]}",
-                                           f"{param}={urllib.parse.quote(payload)}")
+                    test_url = url.replace(f"{param}={params[param][0]}", f"{param}={urllib.parse.quote(payload)}")
                     response = self.session.get(test_url, verify=False, timeout=10)
-
                     if payload in response.text:
                         self.report_vulnerability({
                             'type': 'Cross-Site Scripting (XSS)',
@@ -91,18 +79,16 @@ class WebSecurityScanner:
                             'parameter': param,
                             'payload': payload
                         })
-
             except Exception as e:
                 print(f"Error testing XSS on {url}: {str(e)}")
 
     def check_sensitive_info(self, url: str) -> None:
-        patterns = {
-            'email': r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}',
-            'phone': r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b',
-            'ssn': r'\b\d{3}-\d{2}-\d{4}\b',
-            'api_key': r'api[_-]?key[_-]?([\'"|`])([a-zA-Z0-9]{32,45})\1'
-        }
-
+        patterns =  {
+    'email': r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}',
+    'phone': r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b',
+    'ssn': r'\b\d{3}-\d{2}-\d{4}\b',
+    'api_key': r"api[_-]?key[_-]?(['\"|`])([a-zA-Z0-9]{32,45})\1"
+}
         try:
             response = self.session.get(url, verify=False, timeout=10)
             for info_type, pattern in patterns.items():
@@ -173,8 +159,7 @@ class WebSecurityScanner:
             params = urllib.parse.parse_qs(parsed.query)
             for param in params:
                 if param.lower() in ['redirect', 'url', 'next']:
-                    test_url = url.replace(f"{param}={params[param][0]}",
-                                           f"{param}={urllib.parse.quote(payload)}")
+                    test_url = url.replace(f"{param}={params[param][0]}", f"{param}={urllib.parse.quote(payload)}")
                     resp = self.session.get(test_url, allow_redirects=False, verify=False, timeout=10)
                     if resp.status_code in [301, 302] and 'Location' in resp.headers:
                         if payload in resp.headers['Location']:
@@ -215,9 +200,8 @@ class WebSecurityScanner:
             print(f"Error checking HTTP methods on {url}: {str(e)}")
 
     def scan(self) -> List[Dict]:
-        print(f"\n{colorama.Fore.BLUE}Starting security scan of {self.target_url}{colorama.Style.RESET_ALL}\n")
+        print(f"Starting scan of {self.target_url}")
         self.crawl(self.target_url)
-
         with ThreadPoolExecutor(max_workers=10) as executor:
             for url in self.visited_urls:
                 executor.submit(self.check_sql_injection, url)
@@ -229,25 +213,17 @@ class WebSecurityScanner:
                 executor.submit(self.check_open_redirect, url)
                 executor.submit(self.check_directory_listing, url)
                 executor.submit(self.check_http_methods, url)
-
         return self.vulnerabilities
 
     def report_vulnerability(self, vulnerability: Dict) -> None:
         self.vulnerabilities.append(vulnerability)
-        print(f"{colorama.Fore.RED}[VULNERABILITY FOUND]{colorama.Style.RESET_ALL}")
-        for key, value in vulnerability.items():
-            print(f"{key}: {value}")
-        print()
+        print(f"VULNERABILITY FOUND: {vulnerability}")
 
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python scanner.py <target_url>")
-        sys.exit(1)
-
-    target_url = sys.argv[1]
+def run_scan(target_url: str) -> Dict:
     scanner = WebSecurityScanner(target_url)
     vulnerabilities = scanner.scan()
-
-    print(f"\n{colorama.Fore.GREEN}Scan Complete!{colorama.Style.RESET_ALL}")
-    print(f"Total URLs scanned: {len(scanner.visited_urls)}")
-    print(f"Vulnerabilities found: {len(vulnerabilities)}")
+    return {
+        'url': target_url,
+        'total_urls': len(scanner.visited_urls),
+        'vulnerabilities': scanner.vulnerabilities
+    }
