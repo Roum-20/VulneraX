@@ -2,7 +2,7 @@ import streamlit as st
 from scanner import run_scan
 
 st.set_page_config(page_title="Web Security Scanner", layout="wide")
-st.title("🛡️ Web Security Scanner Dashboard")
+st.title("🛡️VULNERAX DASHBOARD")
 
 st.markdown("Enter a target URL to scan for common web vulnerabilities:")
 
